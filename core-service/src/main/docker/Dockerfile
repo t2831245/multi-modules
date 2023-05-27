@@ -1,14 +1,24 @@
-# 使用 AdoptOpenJDK 17 作为基础镜像
-FROM adoptopenjdk:17-jdk-hotspot
+# 使用 GraalVM CE 22.3.1 作為基礎映像
+FROM ghcr.io/graalvm/graalvm-ce:22.3.1
 
-# 设置工作目录
+# 設定環境變數
+ENV JAVA_HOME /opt/graalvm-ce-22.3.1
+ENV PATH $JAVA_HOME/bin:$PATH
+
+# 複製應用程式的 JAR 檔案到容器內
+COPY target/your-application.jar /app/your-application.jar
+
+# 切換到應用程式的工作目錄
 WORKDIR /app
 
-# 将打包好的 JAR 文件复制到容器中
-COPY target/core-service-1.0.0.jar /app/app.jar
+# 安裝 Native Image 工具
+RUN gu install native-image
 
-# 暴露应用程序的端口（根据需要进行更改）
+# 在容器內編譯生成 Native Image
+RUN native-image --no-server --static -jar your-application.jar
+
+# 設定容器啟動命令
+CMD ["./core-service"]
+
+# 開放應用程式的端口
 EXPOSE 8080
-
-# 启动应用程序
-CMD ["java", "-jar", "/app/app.jar"]
