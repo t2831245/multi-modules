@@ -17,7 +17,6 @@ The command above actually runs these commands
 mvn spring-boot:process-aot
 mvn spring-boot:process-test-aot
 mvn spring-boot:build-image
-mvn spring-boot:build-image
 ```
 
 Usually execute command in ide
@@ -32,4 +31,7 @@ mvn -Pnative -DskipTests native:compile
 ```
 This command can generate target-service.
 
-
+Build spring app to image
+```
+mvn spring-boot:build-image
+```
